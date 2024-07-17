@@ -3,7 +3,7 @@
 
 Deploying selfhosted Kubernetes Cluster using Kubeadm, AWS EC2s, Terraform and Github Actions. (17/7/2024)
 
-Requirements 
+# Requirements 
 Ubuntu server 
 - Master node  -1
 - Worker node -2
