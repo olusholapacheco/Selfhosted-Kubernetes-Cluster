@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-east-1"
+  region = "us-east-2"
 }
 
 # Data sources for default VPC and subnet
@@ -63,7 +63,7 @@ resource "aws_security_group" "k8s_sg" {
 
 # Create Master Node Instance
 resource "aws_instance" "master_node" {
-  ami           = "ami-0c55b159cbfafe1f0"
+  ami           = "ami-003932de22c285676"
   instance_type = "t3.medium"
   key_name      = aws_key_pair.deployer.key_name
   subnet_id     = data.aws_subnet_ids.default.ids[0]
@@ -126,7 +126,7 @@ resource "null_resource" "fetch_join_command" {
 
 # Create Worker Node Instances
 resource "aws_instance" "worker_node1" {
-  ami           = "ami-0c55b159cbfafe1f0"
+  ami           = "ami-003932de22c285676"
   instance_type = "t3.medium"
   key_name      = aws_key_pair.deployer.key_name
   subnet_id     = data.aws_subnet_ids.default.ids[0]
@@ -172,7 +172,7 @@ resource "aws_instance" "worker_node1" {
 }
 
 resource "aws_instance" "worker_node2" {
-  ami           = "ami-0c55b159cbfafe1f0"
+  ami           = "ami-003932de22c285676"
   instance_type = "t3.medium"
   key_name      = aws_key_pair.deployer.key_name
   subnet_id     = data.aws_subnet_ids.default.ids[0]
