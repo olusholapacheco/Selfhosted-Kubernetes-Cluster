@@ -11,7 +11,7 @@ data "aws_subnet_ids" "default" {
   vpc_id = data.aws_vpc.default.id
 }
 
-# Security Group with initial broad SSH access
+# Security Group with initial broad SSH access, SSH access restricted to IP address will be updated once EC2 is deployed 
 resource "aws_security_group" "k8s_sg" {
   name_prefix = "k8s-sg-"
   description = "Allow specific inbound traffic"
@@ -21,7 +21,7 @@ resource "aws_security_group" "k8s_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  # Broad SSH access initially
+    cidr_blocks = ["0.0.0.0/0"]  # SSH access from anywhere is not best practice
     description = "SSH access"
   }
 
