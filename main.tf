@@ -201,7 +201,7 @@ resource "aws_instance" "worker_node2" {
       "apt-add-repository \"deb http://apt.kubernetes.io/ kubernetes-xenial main\"",
       "apt-get update",
       "apt-get install -y kubelet kubeadm kubectl",
-      "sleep 60",  # Ensure master node setup is complete
+      "sleep 60",  # This gives a bit of time to ensure the master node setup is complete
       "JOIN_COMMAND=$(cat /root/joincommand.sh)",
       "eval $JOIN_COMMAND"
     ]
