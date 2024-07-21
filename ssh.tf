@@ -1,14 +1,14 @@
-resource "local_file" "ssh_public_key" {
-  content  = tls_private_key.deployer.public_key_openssh
-  filename = "${path.module}/deployer-key.pub"
+resource "aws_key_pair" "deployer" {
+  key_name   = "deployer"
+  public_key = file(var.public_key_path)
 }
 
 resource "local_file" "ssh_private_key" {
-  content  = tls_private_key.deployer.private_key_pem
-  filename = "${path.module}/deployer-key.pem"
+  content  = file(var.private_key_path)
+  filename = "${path.module}/deployer.pem"
 }
 
-resource "tls_private_key" "deployer" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
+resource "local_file" "ssh_public_key" {
+  content  = file(var.public_key_path)
+  filename = "${path.module}/deployer.pub"
 }

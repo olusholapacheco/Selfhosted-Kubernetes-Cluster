@@ -1,31 +1,25 @@
 variable "master_instance_type" {
-  description = "Instance type for the master node"
-  type        = string
+  description = "EC2 instance type for the master node"
 }
 
 variable "worker_instance_type" {
-  description = "Instance type for the worker nodes"
-  type        = string
+  description = "EC2 instance type for the worker nodes"
 }
 
 variable "ami_id" {
-  description = "AMI ID for the EC2 instances"
-  type        = string
+  description = "AMI ID for the instances"
 }
 
 variable "key_name" {
   description = "Key pair name for SSH access"
-  type        = string
 }
 
 variable "subnet_id" {
   description = "Subnet ID for the instances"
-  type        = string
 }
 
 variable "security_group_ids" {
   description = "Security group IDs for the instances"
-  type        = list(string)
 }
 
 resource "aws_instance" "master_node" {

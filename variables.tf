@@ -1,17 +1,23 @@
 variable "master_instance_type" {
-  description = "Instance type for the master node"
-  type        = string
-  default     = "t3.medium"
+  default = "t3.medium"
 }
 
 variable "worker_instance_type" {
-  description = "Instance type for the worker nodes"
-  type        = string
-  default     = "t3.medium"
+  default = "t3.medium"
 }
 
 variable "ami_id" {
-  description = "AMI ID for the EC2 instances"
-  type        = string
-  default     = "ami-003932de22c285676"
+  default = "ami-003932de22c285676"
+}
+
+variable "key_name" {
+  description = "SSH key pair name"
+}
+
+variable "subnet_id" {
+  description = "Subnet ID"
+}
+
+variable "security_group_ids" {
+  description = "Security group IDs"
 }
