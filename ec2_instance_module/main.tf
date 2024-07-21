@@ -1,13 +1,41 @@
-resource "aws_instance" "master_node" {
-  ami           = var.ami_id
-  instance_type = var.master_instance_type
-  key_name      = var.key_name
-  subnet_id     = var.subnet_id
-  security_groups = var.security_group_ids
+variable "master_instance_type" {
+  description = "Instance type for the master node"
+  type        = string
+}
 
+variable "worker_instance_type" {
+  description = "Instance type for the worker nodes"
+  type        = string
+}
+
+variable "ami_id" {
+  description = "AMI ID for the EC2 instances"
+  type        = string
+}
+
+variable "key_name" {
+  description = "Key pair name for SSH access"
+  type        = string
+}
+
+variable "subnet_id" {
+  description = "Subnet ID for the instances"
+  type        = string
+}
+
+variable "security_group_ids" {
+  description = "Security group IDs for the instances"
+  type        = list(string)
+}
+
+resource "aws_instance" "master_node" {
+  ami                    = var.ami_id
+  instance_type          = var.master_instance_type
+  key_name               = var.key_name
+  subnet_id              = var.subnet_id
+  security_group_ids     = var.security_group_ids
   root_block_device {
     volume_size = 30
-    volume_type = "gp2"
   }
 
   tags = {
@@ -65,15 +93,13 @@ resource "null_resource" "fetch_join_command" {
 }
 
 resource "aws_instance" "worker_node1" {
-  ami           = var.ami_id
-  instance_type = var.worker_instance_type
-  key_name      = var.key_name
-  subnet_id     = var.subnet_id
-  security_groups = var.security_group_ids
-
+  ami                    = var.ami_id
+  instance_type          = var.worker_instance_type
+  key_name               = var.key_name
+  subnet_id              = var.subnet_id
+  security_group_ids     = var.security_group_ids
   root_block_device {
     volume_size = 30
-    volume_type = "gp2"
   }
 
   tags = {
@@ -116,15 +142,13 @@ resource "aws_instance" "worker_node1" {
 }
 
 resource "aws_instance" "worker_node2" {
-  ami           = var.ami_id
-  instance_type = var.worker_instance_type
-  key_name      = var.key_name
-  subnet_id     = var.subnet_id
-  security_groups = var.security_group_ids
-
+  ami                    = var.ami_id
+  instance_type          = var.worker_instance_type
+  key_name               = var.key_name
+  subnet_id              = var.subnet_id
+  security_group_ids     = var.security_group_ids
   root_block_device {
     volume_size = 30
-    volume_type = "gp2"
   }
 
   tags = {

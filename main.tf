@@ -11,7 +11,7 @@ data "aws_subnets" "default" {
   vpc_id = data.aws_vpc.default.id
 }
 
-# Security Group with initial broad SSH access, SSH access restricted to IP address will be updated once EC2 is deployed
+# Security Group with initial broad SSH access
 resource "aws_security_group" "k8s_sg" {
   name_prefix = "k8s-sg-"
   description = "Allow specific inbound traffic"
@@ -21,7 +21,7 @@ resource "aws_security_group" "k8s_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  # SSH access from anywhere is not best practice
+    cidr_blocks = ["0.0.0.0/0"]
     description = "SSH access"
   }
 
@@ -61,13 +61,31 @@ resource "aws_security_group" "k8s_sg" {
   }
 }
 
-module "ec2_instances" {
-  source = "./ec2_instance_module"
-
-  master_instance_type = "t3.medium"
-  worker_instance_type = "t3.medium"
-  ami_id                = "ami-003932de22c285676"
-  key_name              = aws_key_pair.deployer.key_name
-  subnet_id             = data.aws_subnets.default.ids[0]
-  security_group_ids    = [aws_security_group.k8s_sg.id]
+# SSH key pair
+resource "aws_key_pair" "deployer" {
+  key_name   = "deployer-key"
+  public_key = file("${local_file.ssh_public_key.filename}")
 }
+
+module "ec2_instances" {
+  source               = "./ec2_instance_module"
+  master_instance_type = var.master_instance_type
+  worker_instance_type = var.worker_instance_type
+  ami_id               = var.ami_id
+  key_name             = aws_key_pair.deployer.key_name
+  subnet_id            = data.aws_subnets.default.ids[0]
+  security_group_ids   = [aws_security_group.k8s_sg.id]
+}
+
+output "master_public_ip" {
+  value = module.ec2_instances.master_public_ip
+}
+
+output "worker1_public_ip" {
+  value = module.ec2_instances.worker1_public_ip
+}
+
+output "worker2_public_ip" {
+  value = module.ec2_instances.worker2_public_ip
+}
+
