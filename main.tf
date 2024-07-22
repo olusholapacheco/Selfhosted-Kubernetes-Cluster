@@ -2,26 +2,23 @@ provider "aws" {
   region = "us-east-2"
 }
 
-# Data sources for default VPC and subnet
-data "aws_vpc" "default" {
-  default = true
-}
-
 data "aws_subnets" "default" {
-  vpc_id = data.aws_vpc.default.id
+  filter {
+    name   = "vpc-id"
+    values = [var.vpc_id]
+  }
 }
 
-# Security Group with initial broad SSH access
 resource "aws_security_group" "k8s_sg" {
   name_prefix = "k8s-sg-"
   description = "Allow specific inbound traffic"
-  vpc_id      = data.aws_vpc.default.id
+  vpc_id      = var.vpc_id
 
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  # SSH access from anywhere is not best practice
+    cidr_blocks = ["0.0.0.0/0"]
     description = "SSH access"
   }
 
@@ -63,10 +60,13 @@ resource "aws_security_group" "k8s_sg" {
 
 module "ec2_instances" {
   source              = "./ec2_instance_module"
+  vpc_id              = var.vpc_id
   master_instance_type = var.master_instance_type
   worker_instance_type = var.worker_instance_type
-  ami_id               = var.ami_id
-  key_name             = aws_key_pair.deployer.key_name
-  subnet_id            = data.aws_subnets.default.ids[0]
-  security_group_ids   = [aws_security_group.k8s_sg.id]
+  ami_id              = var.ami_id
+  key_name            = var.key_name
+  subnet_id           = data.aws_subnets.default.ids[0]
+  security_group_ids  = [aws_security_group.k8s_sg.id]
+  public_key_path     = var.public_key_path
+  private_key_path    = var.private_key_path
 }
