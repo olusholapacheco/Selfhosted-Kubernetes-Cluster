@@ -26,12 +26,10 @@ This is a simple project, even though in production environments, S3 buckets are
 In this case I choose to use Flannel for its simplicity, even though Calico is a best choice to simulate production level CNI. Sticking to Flannel for the ease of set up. Using Calico, the shell file would look like this 
 
 #!/bin/bash
-
-# Install Docker
 apt-get update
 apt-get install -y docker.io
 
-# Install kubeadm, kubelet and kubectl
+Install kubeadm, kubelet and kubectl
 apt-get update && apt-get install -y apt-transport-https curl
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
@@ -41,20 +39,21 @@ apt-get update
 apt-get install -y kubelet kubeadm kubectl
 apt-mark hold kubelet kubeadm kubectl
 
-# Initialize Kubernetes on master
+Initialize Kubernetes on master
 if hostname | grep -q "master"; then
   kubeadm init --pod-network-cidr=192.168.0.0/16
   mkdir -p $HOME/.kube
   cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
   chown $(id -u):$(id -g) $HOME/.kube/config
 
-  # Install a Pod network add-on (Calico)
+Install a Pod network add-on (Calico)
   kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 
-  # Generate join command
+  Generate join command
   kubeadm token create --print-join-command > /root/join_command.sh
 else
-  # Join worker nodes to the cluster
+  
+  Join worker nodes to the cluster
   bash /root/join_command.sh
 fi
 
