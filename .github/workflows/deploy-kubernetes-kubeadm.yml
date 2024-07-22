@@ -1,4 +1,4 @@
-name: Deploy Kubernetes Cluster using Kubeadm on AWS EC2s
+name: Deploy Kubernetes Cluster using Kubeadm and AWS EC2s
 
 on:
   push:
