@@ -1,25 +1,46 @@
+variable "vpc_id" {
+  type        = string
+  description = "The VPC ID to launch instances in"
+}
+
 variable "master_instance_type" {
+  type        = string
   description = "EC2 instance type for the master node"
 }
 
 variable "worker_instance_type" {
+  type        = string
   description = "EC2 instance type for the worker nodes"
 }
 
 variable "ami_id" {
-  description = "AMI ID for the instances"
+  type        = string
+  description = "The AMI ID for the EC2 instances"
 }
 
 variable "key_name" {
-  description = "Key pair name for SSH access"
+  type        = string
+  description = "The name of the SSH key pair"
 }
 
 variable "subnet_id" {
-  description = "Subnet ID for the instances"
+  type        = string
+  description = "The subnet ID to launch instances in"
 }
 
 variable "security_group_ids" {
-  description = "Security group IDs for the instances"
+  type        = list(string)
+  description = "List of security group IDs to associate with"
+}
+
+variable "public_key_path" {
+  type        = string
+  description = "Path to the SSH public key"
+}
+
+variable "private_key_path" {
+  type        = string
+  description = "Path to the SSH private key"
 }
 
 resource "aws_instance" "master_node" {
@@ -37,7 +58,7 @@ resource "aws_instance" "master_node" {
   }
 
   provisioner "file" {
-    source      = "${local_file.ssh_public_key.filename}"
+    source      = var.public_key_path
     destination = "/root/.ssh/authorized_keys"
   }
 
@@ -66,7 +87,7 @@ resource "aws_instance" "master_node" {
   connection {
     type        = "ssh"
     user        = "root"
-    private_key = file("${local_file.ssh_private_key.filename}")
+    private_key = file(var.private_key_path)
     host        = self.public_ip
   }
 }
@@ -75,13 +96,13 @@ resource "null_resource" "fetch_join_command" {
   depends_on = [aws_instance.master_node]
 
   provisioner "local-exec" {
-    command = "scp -o StrictHostKeyChecking=no -i ${local_file.ssh_private_key.filename} root@${aws_instance.master_node.public_ip}:/root/joincommand.sh ./joincommand.sh"
+    command = "scp -o StrictHostKeyChecking=no -i ${var.private_key_path} root@${aws_instance.master_node.public_ip}:/root/joincommand.sh ./joincommand.sh"
   }
 
   connection {
     type        = "ssh"
     user        = "root"
-    private_key = file("${local_file.ssh_private_key.filename}")
+    private_key = file(var.private_key_path)
     host        = aws_instance.master_node.public_ip
   }
 }
@@ -101,7 +122,7 @@ resource "aws_instance" "worker_node1" {
   }
 
   provisioner "file" {
-    source      = "${local_file.ssh_public_key.filename}"
+    source      = var.public_key_path
     destination = "/root/.ssh/authorized_keys"
   }
 
@@ -119,7 +140,7 @@ resource "aws_instance" "worker_node1" {
       "apt-add-repository \"deb http://apt.kubernetes.io/ kubernetes-xenial main\"",
       "apt-get update",
       "apt-get install -y kubelet kubeadm kubectl",
-      "sleep 60",  # Ensure master node setup is complete
+      "sleep 60",
       "JOIN_COMMAND=$(cat /root/joincommand.sh)",
       "eval $JOIN_COMMAND"
     ]
@@ -128,7 +149,7 @@ resource "aws_instance" "worker_node1" {
   connection {
     type        = "ssh"
     user        = "root"
-    private_key = file("${local_file.ssh_private_key.filename}")
+    private_key = file(var.private_key_path)
     host        = self.public_ip
   }
 
@@ -150,7 +171,7 @@ resource "aws_instance" "worker_node2" {
   }
 
   provisioner "file" {
-    source      = "${local_file.ssh_public_key.filename}"
+    source      = var.public_key_path
     destination = "/root/.ssh/authorized_keys"
   }
 
@@ -168,7 +189,7 @@ resource "aws_instance" "worker_node2" {
       "apt-add-repository \"deb http://apt.kubernetes.io/ kubernetes-xenial main\"",
       "apt-get update",
       "apt-get install -y kubelet kubeadm kubectl",
-      "sleep 60",  # Ensure master node setup is complete
+      "sleep 60",
       "JOIN_COMMAND=$(cat /root/joincommand.sh)",
       "eval $JOIN_COMMAND"
     ]
@@ -177,7 +198,7 @@ resource "aws_instance" "worker_node2" {
   connection {
     type        = "ssh"
     user        = "root"
-    private_key = file("${local_file.ssh_private_key.filename}")
+    private_key = file(var.private_key_path)
     host        = self.public_ip
   }
 
