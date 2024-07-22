@@ -16,6 +16,13 @@ crash.*.log
 *.tfvars
 *.tfvars.json
 
+
+# Ignore SSH keys and other sensitive files
+id_rsa
+id_rsa.pub
+private_key.pem
+public_key.pem
+
 # Ignore override files as they are usually used to override resources locally and so
 # are not checked in
 override.tf
