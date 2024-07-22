@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Ensure the script is run as root
+if [ "$EUID" -ne 0 ]; then
+  echo "Please run as root"
+  exit 1
+fi
+
 set -e # command in a bash script ensures that the script will exit immediately if any command returns a non-zero exit status.
 
 # Install necessary dependencies
