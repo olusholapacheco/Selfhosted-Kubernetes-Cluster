@@ -1,11 +1,7 @@
-output "master_node_public_ip" {
-  value = module.ec2_instances.master_node_public_ip
+output "master_public_ip" {
+  value = aws_instance.k8s_master.public_ip
 }
 
-output "worker_node1_public_ip" {
-  value = module.ec2_instances.worker_node1_public_ip
-}
-
-output "worker_node2_public_ip" {
-  value = module.ec2_instances.worker_node2_public_ip
+output "worker_public_ips" {
+  value = [for instance in aws_instance.k8s_worker : instance.public_ip]
 }

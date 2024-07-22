@@ -1,50 +1,35 @@
-variable "vpc_id" {
+variable "aws_region" {
+  description = "The AWS region to deploy the infrastructure in"
   type        = string
-  description = "The VPC ID to launch instances in"
-  default     = "vpc-027b20294366b2905"
+  default     = "us-east-1"
 }
 
-variable "master_instance_type" {
+variable "instance_type" {
+  description = "The type of instance to deploy"
   type        = string
-  description = "EC2 instance type for the master node"
-  default     = "t3.medium"
-}
-
-variable "worker_instance_type" {
-  type        = string
-  description = "EC2 instance type for the worker nodes"
   default     = "t3.medium"
 }
 
 variable "ami_id" {
+  description = "The AMI ID to use for the instances"
   type        = string
-  description = "The AMI ID for the EC2 instances"
   default     = "ami-003932de22c285676"
 }
 
-variable "key_name" {
+variable "vpc_id" {
+  description = "The VPC ID where the instances will be deployed"
   type        = string
-  description = "The name of the SSH key pair"
+  default     = "vpc-027b20294366b2905"
 }
 
-variable "subnet_id" {
+variable "ssh_key_name" {
+  description = "The name of the SSH key pair to use for the instances"
   type        = string
-  description = "The subnet ID to launch instances in"
+  default     = "generated-key"
 }
 
-variable "security_group_ids" {
+variable "cidr_blocks" {
+  description = "The list of CIDR blocks to allow access to the instances"
   type        = list(string)
-  description = "List of security group IDs to associate with"
-}
-
-variable "public_key_path" {
-  type        = string
-  description = "Path to the SSH public key"
-  default     = "${path.module}/id_rsa.pub"
-}
-
-variable "private_key_path" {
-  type        = string
-  description = "Path to the SSH private key"
-  default     = "${path.module}/id_rsa"
+  default     = ["0.0.0.0/0"]
 }
