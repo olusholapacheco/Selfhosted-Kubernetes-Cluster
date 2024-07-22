@@ -10,7 +10,7 @@ Ubuntu server
 - Docker 
 - Kubernetes packages (Kubelet, kubeadm, Kubectl)
 - Container Runtime - containerd
-- Container Network Interface - Calico
+- Container Network Interface - Flannel
 
 
 # terraform.tfvars.changes 
@@ -19,5 +19,10 @@ This is added as a reminder that terraform.tfvars though mostly added to .gitign
 # statefiles and storing concurrency 
 
 This is a simple project, even though in production environments, S3 buckets are created to store state file and Dynamodb to handle concurrency. We are not creating this here to save on aws costs.
+
+
+# Container Network Interface
+
+In this case I choose to use Flannel for its simplicity, even though Calico is a best choice to simulate production level CNI. Sticking to Flannel for the ease of set up
 
 
