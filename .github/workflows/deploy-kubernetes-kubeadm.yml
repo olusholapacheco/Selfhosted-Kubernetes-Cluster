@@ -60,6 +60,5 @@ jobs:
           ssh -o StrictHostKeyChecking=no root@$IP 'chmod +x /root/setup_k8s.sh && /root/setup_k8s.sh'
         done
 
-  
     # - name: Terraform Destroy
     #   run: terraform destroy -auto-approve
