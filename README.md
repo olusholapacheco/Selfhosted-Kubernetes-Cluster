@@ -13,6 +13,6 @@ Ubuntu server
 - Container Network Interface - Calico
 
 
-# Why do we have two main.tf files, one as root and the other under the EC2 module?
-The separation into two main.tf files is to modularize the configuration. The root main.tf handles the overall infrastructure setup and references the ec2_instance_module, which contains its own main.tf for specific EC2 instance configurations. This modular approach improves organization, reusability, and maintainability of the Terraform code.
+# terraform.tfvars.changes 
+This is added as a reminder that terraform.tfvars though mostly added to .gitignore, changes in this file can be used to override the configurations to make quick changes without needing to rework the whole terraform file all over again
 

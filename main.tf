@@ -47,6 +47,11 @@ resource "aws_instance" "k8s_master" {
   security_groups        = [aws_security_group.k8s_sg.name]
   key_name               = aws_key_pair.generated_key.key_name
 
+  root_block_device {
+    volume_size           = 30
+    volume_type           = "gp2"
+  }
+
   tags = {
     Name = "master"
   }
@@ -58,6 +63,11 @@ resource "aws_instance" "k8s_worker" {
   instance_type          = var.instance_type
   security_groups        = [aws_security_group.k8s_sg.name]
   key_name               = aws_key_pair.generated_key.key_name
+
+  root_block_device {
+    volume_size           = 30
+    volume_type           = "gp2"
+  }
 
   tags = {
     Name = "worker-node${count.index + 1}"
