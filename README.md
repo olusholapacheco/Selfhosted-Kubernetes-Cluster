@@ -14,5 +14,10 @@ Ubuntu server
 
 
 # terraform.tfvars.changes 
-This is added as a reminder that terraform.tfvars though mostly added to .gitignore, changes in this file can be used to override the configurations to make quick changes without needing to rework the whole terraform file all over again
+This is added as a reminder that terraform.tfvars though mostly added to .gitignore, changes in this file can be used to override the configurations to make quick deployments without needing to rework the whole terraform file all over again
+
+# statefiles and storing concurrency 
+
+This is a simple project, even though in production environments, S3 buckets are created to store state file and Dynamodb to handle concurrency. We are not creating this here to save on aws costs.
+
 
