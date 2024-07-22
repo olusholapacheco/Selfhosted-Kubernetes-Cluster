@@ -26,6 +26,7 @@ resource "aws_security_group" "k8s_sg" {
   name_prefix = "k8s-sg-"
   vpc_id      = var.vpc_id
 
+  # General inbound rules
   ingress {
     from_port   = 0
     to_port     = 65535
@@ -33,10 +34,77 @@ resource "aws_security_group" "k8s_sg" {
     cidr_blocks = var.cidr_blocks
   }
 
+  # General outbound rules
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
+    cidr_blocks = var.cidr_blocks
+  }
+
+  # Kubernetes-specific inbound rules
+  ingress {
+    from_port   = 6443
+    to_port     = 6443
+    protocol    = "tcp"
+    cidr_blocks = var.cidr_blocks
+  }
+
+  ingress {
+    from_port   = 10250
+    to_port     = 10250
+    protocol    = "tcp"
+    cidr_blocks = var.cidr_blocks
+  }
+
+  ingress {
+    from_port   = 10251
+    to_port     = 10251
+    protocol    = "tcp"
+    cidr_blocks = var.cidr_blocks
+  }
+
+  ingress {
+    from_port   = 10252
+    to_port     = 10252
+    protocol    = "tcp"
+    cidr_blocks = var.cidr_blocks
+  }
+
+  ingress {
+    from_port   = 30000
+    to_port     = 32767
+    protocol    = "tcp"
+    cidr_blocks = var.cidr_blocks
+  }
+
+  # Ports for etcd if running on the master node
+  ingress {
+    from_port   = 2379
+    to_port     = 2379
+    protocol    = "tcp"
+    cidr_blocks = var.cidr_blocks
+  }
+
+  ingress {
+    from_port   = 2380
+    to_port     = 2380
+    protocol    = "tcp"
+    cidr_blocks = var.cidr_blocks
+  }
+
+  # Ports for network plugins (e.g., Flannel)
+  ingress {
+    from_port   = 6783
+    to_port     = 6783
+    protocol    = "udp"
+    cidr_blocks = var.cidr_blocks
+  }
+
+  ingress {
+    from_port   = 6784
+    to_port     = 6784
+    protocol    = "udp"
     cidr_blocks = var.cidr_blocks
   }
 }
