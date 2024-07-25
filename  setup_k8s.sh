@@ -6,7 +6,7 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
-set -e # command in a bash script ensures that the script will exit immediately if any command returns a non-zero exit status.
+set -e # Exit immediately if any command returns a non-zero status.
 
 # Install necessary dependencies
 sudo apt-get update
@@ -85,4 +85,3 @@ else
   # Join worker nodes to the cluster
   sudo bash /root/join_command.sh
 fi
-
