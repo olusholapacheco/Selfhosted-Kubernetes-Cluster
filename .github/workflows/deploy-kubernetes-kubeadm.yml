@@ -46,27 +46,20 @@ jobs:
         cat private_key.pem > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
 
-    - name: Debug Terraform Outputs
-      run: terraform output -json
-
     - name: Set up master node
       run: |
         MASTER_IP=$(terraform output -raw master_public_ip)
         echo "Master IP: $MASTER_IP"
         scp -o StrictHostKeyChecking=no setup_k8s.sh root@$MASTER_IP:/root/
         ssh -o StrictHostKeyChecking=no root@$MASTER_IP 'chmod +x /root/setup_k8s.sh && /root/setup_k8s.sh'
-      shell: bash
 
     - name: Set up worker nodes
       run: |
         WORKER_IPS=$(terraform output -json worker_public_ips | jq -r '.[]')
-        echo "Worker IPs: $WORKER_IPS"
         for IP in $WORKER_IPS; do
-          echo "Setting up worker node at $IP"
           scp -o StrictHostKeyChecking=no setup_k8s.sh root@$IP:/root/
           ssh -o StrictHostKeyChecking=no root@$IP 'chmod +x /root/setup_k8s.sh && /root/setup_k8s.sh'
         done
-      shell: bash
 
     # - name: Terraform Destroy
     #   run: terraform destroy -auto-approve
