@@ -1,18 +1,15 @@
-terraform {
-  backend "s3" {
-    bucket         = "my-terraform-state-bucket"
-    key            = "terraform.tfstate"
-    region         = "us-east-1"
-    dynamodb_table = "terraform-locks"
+module "s3_bucket" {
+  source = "terraform-aws-modules/s3-bucket/aws"
+
+  bucket = "my-terraform-state-bucket"
+  acl    = "private"
+
+  control_object_ownership = true
+  object_ownership         = "ObjectWriter"
+
+  versioning = {
+    enabled = true
   }
-}
-
-provider "aws" {
-  region = "us-east-1"
-}
-
-resource "aws_s3_bucket" "directory" {
-  bucket = "terraform-state-folder"
 }
 
 resource "aws_dynamodb_table" "terraform_locks" {
@@ -31,4 +28,9 @@ resource "aws_dynamodb_table" "terraform_locks" {
   tags = {
     Name = "terraform-locks"
   }
+}
+
+resource "aws_s3_bucket_object" "directory" {
+  bucket = module.s3_bucket.bucket
+  key    = "terraform-state-folder/"
 }
