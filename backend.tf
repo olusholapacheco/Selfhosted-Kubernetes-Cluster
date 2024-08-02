@@ -1,8 +1,3 @@
-# Configure the AWS provider
-provider "aws" {
-  region = var.aws_region
-}
-
 # Use the S3 bucket module
 module "s3_bucket" {
   source = "terraform-aws-modules/s3-bucket/aws"
@@ -41,14 +36,4 @@ resource "aws_dynamodb_table" "terraform_locks" {
 resource "aws_s3_bucket_object" "directory" {
   bucket = module.s3_bucket.bucket
   key    = "terraform-state-folder/"
-}
-
-# Store the Terraform state file in the S3 bucket
-terraform {
-  backend "s3" {
-    bucket         = module.s3_bucket.bucket
-    key            = "terraform-state-folder/terraform.tfstate"
-    region         = var.aws_region
-    dynamodb_table = aws_dynamodb_table.terraform_locks.name
-  }
 }
