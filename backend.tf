@@ -39,9 +39,9 @@ resource "aws_dynamodb_table" "terraform_locks" {
 
 # Create a directory in the S3 bucket
 module "s3_bucket_directory" {
-  source  = "terraform-aws-modules/s3-bucket/aws//modules/directory"
+  source  = "terraform-aws-modules/s3-bucket/aws//modules/folder"
   bucket  = module.s3_bucket.bucket
-  prefix  = "terraform-state-folder/"
+  name    = "terraform-state-folder"
 }
 
 # Store the Terraform state file in the S3 bucket
