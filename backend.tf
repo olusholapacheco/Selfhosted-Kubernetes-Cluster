@@ -1,19 +1,20 @@
-# Use the S3 bucket module
-module "s3_bucket" {
-  source = "terraform-aws-modules/s3-bucket/aws"
-
-  bucket = "my-terraform-state-bucket"
-  acl    = "private"
-
-  control_object_ownership = true
-  object_ownership         = "ObjectWriter"
-
-  versioning = {
-    enabled = true
+terraform {
+  backend "s3" {
+    bucket         = "my-terraform-state-bucket"
+    key            = "terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "terraform-locks"
   }
 }
 
-# Create a DynamoDB table for Terraform state locking
+provider "aws" {
+  region = "us-east-1"
+}
+
+resource "aws_s3_bucket" "directory" {
+  bucket = "terraform-state-folder"
+}
+
 resource "aws_dynamodb_table" "terraform_locks" {
   name           = "terraform-locks"
   billing_mode   = "PAY_PER_REQUEST"
@@ -30,10 +31,4 @@ resource "aws_dynamodb_table" "terraform_locks" {
   tags = {
     Name = "terraform-locks"
   }
-}
-
-# Create a directory in the S3 bucket
-resource "aws_s3_bucket_object" "directory" {
-  bucket = module.s3_bucket.bucket
-  key    = "terraform-state-folder/"
 }
