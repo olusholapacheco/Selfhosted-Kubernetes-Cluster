@@ -13,7 +13,7 @@ resource "aws_s3_bucket" "my_bucket" {
 }
 
 resource "aws_s3_bucket_object" "directory" {
-  bucket = aws_s3_bucket.my_bucket.id
+  bucket = aws_s3_bucket.my_bucket.idd
   key    = "terraform-state-folder/"
 }
 
