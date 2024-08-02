@@ -1,7 +1,7 @@
 variable "aws_region" {
   description = "The AWS region to deploy the infrastructure in"
   type        = string
-  default     = "us-east-2"
+  default     = "us-east-1"
 }
 
 variable "instance_type" {
@@ -19,7 +19,7 @@ variable "ami_id" {
 variable "vpc_id" {
   description = "The VPC ID where the instances will be deployed"
   type        = string
-  default     = "vpc-027b20294366b2905"
+  default     = "vpc-06fd7380b37448ef1"
 }
 
 variable "ssh_key_name" {
