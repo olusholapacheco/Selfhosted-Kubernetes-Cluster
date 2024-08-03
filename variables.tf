@@ -19,7 +19,7 @@ variable "ami_id" {
 variable "vpc_id" {
   description = "The VPC ID where the instances will be deployed"
   type        = string
-  default     = "vpc-06fd7380b37448ef1"
+  default     = "vpc-027b20294366b2905"
 }
 
 variable "ssh_key_name" {
